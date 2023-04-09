@@ -44,16 +44,37 @@ for y in delete_line:
     x = 0
     x1 = -1
     x2 = -1
-    while x1 == -1 and edges[int(y), x] == 0: x = x + 1
-    x1 = x - 5
+    while x1 == -1:
+        flag = 1
+        for j in range(-5, 5):
+            if edges[int(y) + j, x] == 255: flag = 0
+        if flag: x = x + 1
+        else: x1 = x - 5
+        
     x = n - 1
-    while x2 == -1 and edges[int(y), x] == 0: x = x - 1
-    x2 = x + 5
+    while x2 == -1:
+        flag = 1
+        for j in range(-5, 5):
+            if edges[int(y) + j, x] == 255: flag = 0
+        if flag: x = x - 1
+        else: x2 = x + 5
+        
     X.append([x1, x2])
     
+# for idx, xx in enumerate(X):
+#     for i in range(1, 3):
+#         if idx - i < 0: continue
+#         yy = X[idx - i]
+#         if abs(xx[0] - yy[0]) < 5: 
+#             xx[0] = min(xx[0], yy[0])
+#             yy[0] = xx[0]
+#         if abs(xx[1] - yy[1]) < 5: 
+#             xx[1] = max(xx[1], yy[1])
+#             yy[1] = xx[1]
+
 # Draw lines
 image = image_raw.copy()
 for xx, y in zip (X, delete_line):
     x1, x2 = xx
-    cv.line(image, (x1, int(y)), (x2, int(y)), (0, 0, 255), 2)
+    cv.line(image, (x1, int(y)), (x2, int(y)), (0, 0, 0), 2)
 cv.imwrite('./results/4.png', image)
