@@ -26,6 +26,7 @@ for line in lines:
     cv.line(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
 cv.imwrite('./results/2.png', image)
 
+# Clustering (Kmeans)
 Y = np.array(Y).reshape(-1, 1)
 clustering = KMeans(n_clusters = 11).fit(Y)
 delete_line = np.floor(clustering.cluster_centers_.reshape(1, -1)[0])
@@ -35,3 +36,24 @@ image = image_raw.copy()
 for y in delete_line:
     cv.line(image, (x1, int(y)), (x2, int(y)), (0, 0, 255), 2)
 cv.imwrite('./results/3.png', image)
+
+# Determine line segment
+X = []
+m, n = edges.shape
+for y in delete_line:
+    x = 0
+    x1 = -1
+    x2 = -1
+    while x1 == -1 and edges[int(y), x] == 0: x = x + 1
+    x1 = x - 5
+    x = n - 1
+    while x2 == -1 and edges[int(y), x] == 0: x = x - 1
+    x2 = x + 5
+    X.append([x1, x2])
+    
+# Draw lines
+image = image_raw.copy()
+for xx, y in zip (X, delete_line):
+    x1, x2 = xx
+    cv.line(image, (x1, int(y)), (x2, int(y)), (0, 0, 255), 2)
+cv.imwrite('./results/4.png', image)
